@@ -1,6 +1,11 @@
 defmodule GameTest do
   use ExUnit.Case
 
+  test "agreed? with no estimates" do
+    game = %PlanningPoker.Game{players: [:bob, :ted], estimates: []}
+    assert ! PlanningPoker.Game.agreed?(game)
+  end
+
   test "agreed?" do
     estimates = [{:bob, 1}, {:ted, 1}]
     game = %PlanningPoker.Game{players: [:bob, :ted], estimates: estimates}
@@ -17,6 +22,12 @@ defmodule GameTest do
     estimates = [{:bob, 1}, {:ted, 1}]
     game = %PlanningPoker.Game{players: [:bob, :ted], estimates: estimates}
     assert PlanningPoker.Game.get_estimate(game) == 1
+  end
+
+  test "get_estimate when not agreed" do
+    estimates = [{:bob, 1}, {:ted, 2}]
+    game = %PlanningPoker.Game{players: [:bob, :ted], estimates: estimates}
+    assert ! PlanningPoker.Game.get_estimate(game)
   end
 
   test "estimated? when not all estimates are in" do

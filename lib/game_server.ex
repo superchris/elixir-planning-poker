@@ -5,32 +5,32 @@ defmodule PlanningPoker.GameServer do
     GenServer.start_link(__MODULE__, %PlanningPoker.Game{}, name: {:global, __MODULE__} )
   end
 
-  def join_game(player) do
-    GenServer.cast __MODULE__, {:join_game, player}
+  def join_game(pid, player) do
+    GenServer.cast pid, {:join_game, player}
   end
 
-  def estimate_story(estimate) do
-    GenServer.cast __MODULE__, { :estimate_story, estimate }
+  def estimate_story(pid, estimate) do
+    GenServer.cast pid, { :estimate_story, estimate }
   end
 
-  def list_players do
-    GenServer.call __MODULE__, :list_players
+  def list_players(pid) do
+    GenServer.call pid, :list_players
   end
 
-  def get_estimate do
-    GenServer.call __MODULE__, :get_estimate
+  def get_estimate(pid) do
+    GenServer.call pid, :get_estimate
   end
 
   def handle_cast({:estimate_story, estimate}, game) do
-    {:no_reply, %{ game | estimates: [ estimate | game.estimates ] } }
+    {:noreply, %PlanningPoker.Game{ game | estimates: [ estimate | game.estimates ] } }
   end
 
   def handle_cast({:join_game, player}, game) do
-    { :noreply, %{ game | players: [ player | game.players ] } }
+    { :noreply, %PlanningPoker.Game{ game | players: [ player | game.players ] } }
   end
 
   def handle_call(:get_estimate, _from, game) do
-    { :reply, PlanningPoker.Game.get_estimate(game) }
+    { :reply, PlanningPoker.Game.get_estimate(game), game }
   end
 
   def handle_call(:list_players, _from, game) do

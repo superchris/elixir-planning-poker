@@ -6,6 +6,8 @@ defmodule PlanningPoker.Game do
     Enum.all? other_estimates, fn({_, other_estimate}) -> other_estimate == estimate end
   end
 
+  def agreed?(%PlanningPoker.Game{estimates: []}), do: false
+
   def get_estimate(game = %PlanningPoker.Game{estimates: [{_, estimate} | _ ] }) do
     if agreed?(game), do: estimate
   end
